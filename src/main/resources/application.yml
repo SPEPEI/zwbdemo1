@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/interfacedemo?characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: root
+    password: root
+
+
+logging:
+  level:
+    root: info
+    com:
+      example:
+        demo:
+          mapper: debug

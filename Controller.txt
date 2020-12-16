@@ -1,0 +1,72 @@
+
+    @Autowired
+    private UserService userService;
+
+    //增加用户
+    @PostMapping("/users")
+    public JsonResult<List<User>> list() {
+        List<User> list = new ArrayList<>();
+        list.add(new User(1, "张三", 20));
+        list.add(new User(2, "李四", 25));
+        list.add(new User(3, "王五", 23));
+        return new JsonResult<>(ErrCode.OK, list);
+    }
+
+    //新增用户
+    @PostMapping
+    @ResponseBody
+    public ResponseEntity<Void> saveUser(User user) {
+        try {
+            this.userService.save(user);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    //通过ID删除用户
+    @DeleteMapping("/users/{id}")
+    @ResponseBody
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") int id) {
+    try {
+        if (id==0) {
+            // 请求参数有误
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        this.userService.removeById(id);
+        // 204
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    // 500
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+}
+
+    //通过ID查询
+    @GetMapping("/users/{id}")
+    @ResponseBody
+    public ResponseEntity<User> queryUserById(@PathVariable("id") int id) {
+        try {
+            User user = this.userService.getById(id);
+            if (null == user) {
+                return new  ResponseEntity(user,HttpStatus.NOT_FOUND);
+            }
+            return ResponseEntity.ok(user);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    //更新用户信息
+    @PutMapping("/users/{id}")
+    @ResponseBody
+    public ResponseEntity<Void> updateUser(User user) {
+        try {
+            this.userService.updateById(user);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
